@@ -14,7 +14,7 @@
 
 <p align="left"> <a href="https://twitter.com/festo_ug" target="blank"><img src="https://img.shields.io/twitter/follow/festo_ug?logo=twitter&style=for-the-badge" alt="festo_ug" /></a> </p>
 
-- 🌱 I’m currently **A at student Holberton School**
+- 🌱 I’m currently **A Student at Makerere University Business School**
 
 - 👨‍💻 All of my projects are available at [https://github.com/Festo1](https://github.com/Festo1)
 
