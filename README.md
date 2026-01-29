@@ -78,9 +78,22 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 ---
 
+#
 
-### 📺 Featured YouTube Videos
-[<img src="https://custom-icon-badges.demolab.com/badge/-Subscribe%20For%20More-red?style=for-the-badge&logo=video&logoColor=white"/>](https://www.youtube.com/channel/UCSiPOa3Vowwi42t1BysexmQ?sub_confirmation=1)
+### 📺 Latest YouTube Videos
+
+<!-- BEGIN YOUTUBE-CARDS -->
+[![The Right Way to Install Docker & WSL on Windows (2025)](https://ytcards.demolab.com/?id=rrucKl2Df8c&title=The+Right+Way+to+Install+Docker+%26+WSL+on+Windows+(2025)&lang=en&timestamp=1759363200&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=1&width=250&border_radius=5&duration=1163 "The Right Way to Install Docker & WSL on Windows (2025)")](https://www.youtube.com/watch?v=rrucKl2Df8c) &nbsp;
+[![FREE $100 Azure Credit in 2025 (No Credit Card Required)](https://ytcards.demolab.com/?id=3rWZCgPHOyI&title=FREE+%24100+Azure+Credit+in+2025+(No+Credit+Card+Required)&lang=en&timestamp=1760659200&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=1&width=250&border_radius=5&duration=1087 "FREE $100 Azure Credit in 2025 (No Credit Card Required)")](https://www.youtube.com/watch?v=3rWZCgPHOyI) &nbsp;
+[![Install VMware Workstation Pro 17 FREE in 2025](https://ytcards.demolab.com/?id=YWVJv3wRpls&title=Install+VMware+Workstation+Pro+17+FREE+in+2025&lang=en&timestamp=1758153600&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=1&width=250&border_radius=5&duration=699 "Install VMware Workstation Pro 17 FREE in 2025")](https://www.youtube.com/watch?v=YWVJv3wRpls) &nbsp;
+[![Install Docker on Ubuntu in VMware (2025 Complete Guide)](https://ytcards.demolab.com/?id=ArvnmnCZqZs&title=Install+Docker+on+Ubuntu+in+VMware+(2025+Complete+Guide)&lang=en&timestamp=1758758400&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=1&width=250&border_radius=5&duration=1175 "Install Docker on Ubuntu in VMware (2025 Complete Guide)")](https://www.youtube.com/watch?v=ArvnmnCZqZs) &nbsp;
+[![Install ANY Operating System in VMware Workstation 17 Pro](https://ytcards.demolab.com/?id=8pNI1qxray4&title=Install+ANY+Operating+System+in+VMware+Workstation+17+Pro&lang=en&timestamp=1758585600&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=1&width=250&border_radius=5&duration=1290 "Install ANY Operating System in VMware Workstation 17 Pro")](https://www.youtube.com/watch?v=8pNI1qxray4) &nbsp;
+[![Docker Tutorial: Containerizing a Flask API & PostgreSQL](https://ytcards.demolab.com/?id=y0WUqvRaO-g&title=Docker+Tutorial%3A+Containerizing+a+Flask+API+%26+PostgreSQL&lang=en&timestamp=1759449600&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=1&width=250&border_radius=5&duration=4186 "Docker Tutorial: Containerizing a Flask API & PostgreSQL")](https://www.youtube.com/watch?v=y0WUqvRaO-g)
+[<img src="https://custom-icon-badges.demolab.com/badge/-Subscribe%20For%20More-red?style=for-the-badge&logo=video&logoColor=white"/>](https://www.youtube.com/channel/UCSiPOa3Vowwi42t1BysexmQ?sub_confirmation=1) &nbsp;
+<!-- END YOUTUBE-CARDS -->
+
+#
+
 ---
 
 ## 💻 Tech Stack
