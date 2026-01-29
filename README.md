@@ -2,52 +2,30 @@
     <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&center=true&vCenter=true&width=500&height=70&duration=4000&lines=Hi+There!+👋;+I'm+Festo+Wampamba!;" />
 </h1>
 
-<h3 align="center"> A passionate software engineer dedicated to creating innovative solutions with extensive experience in software development and exceptional proficiency in industry-standard technologies....</h3>
+<h3 align="center">Software Engineer & Founder of kore-standards | Creator of Enterprise IT Mastery</h3>
 
-<img align="right" alt="Softaware" width="400" height="300" src="https://github.com/Festo1/Festo1/assets/123329373/9c8e1b3d-addd-4ff6-841f-50a53dc49b4d">
+<p align="center">
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=Festo-Wampamba.Festo-Wampamba&left_color=goldenrod&right_color=darkgreen&left_text=Profile%20views" />
+</p>
 
-###
+---
 
-<img align="left" src="https://visitor-badge.laobi.icu/badge?page_id=Festo1.Festo1&left_color=goldenrod&right_color=darkgreen&left_text=Profile%20views"  />
+### 🚀 About Me
+- 🎓 **Student at Makerere University Business School**
+- 🛠️ **Lead Developer of [kore-standards](https://github.com/Festo-Wampamba/kore-standards):** Building innovative, industry-standard software solutions.
+- 📺 **Enterprise IT Mastery:** I create content on DevOps, Networking, and System Administration.
+- 💬 Ask me about **Next.js, PostgreSQL, Drizzle ORM, and RAG architectures.**
+- 📫 Reach me at: **festotechug@gmail.com**
 
-### <br>
+### 🤝 Connect with me
+<p align="left">
+  <a href="https://twitter.com/festo_ug" target="_blank"><img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" /></a>
+  <a href="https://www.linkedin.com/in/festo-muwanguzi/" target="_blank"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" /></a>
+  <a href="https://www.youtube.com/@EnterpriseITMastery" target="_blank"><img src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white" /></a>
+  <a href="https://t.me/Festo_ug" target="_blank"><img src="https://img.shields.io/badge/Telegram-26A6E1?style=for-the-badge&logo=telegram&logoColor=white" /></a>
+</p>
 
-<p align="left"> <a href="https://twitter.com/festo_ug" target="blank"><img src="https://img.shields.io/twitter/follow/festo_ug?logo=twitter&style=for-the-badge" alt="festo_ug" /></a> </p>
-
-- 🌱 I’m currently **A Student at Makerere University Business School**
-
-- 👨‍💻 All of my projects are available at [https://github.com/Festo1](https://github.com/Festo1)
-
-- 💬 Ask me about **HTML, CSS, PHP, MySQL, Javascript**
-
-- 📫 How to reach me **festoeducation@gmail.com**
-
-<h3 align="left"> <b>Connect with me</b>: <img src="https://github.com/0xAbdulKhalid/0xAbdulKhalid/raw/main/assets/mdImages/handshake.gif" width ="70"></h3>
-
-###
-
-<div align="left">
-      <a href="https://twitter.com/festo_ug" target="_blank">
-    <img src="https://raw.githubusercontent.com/maurodesouza/profile-readme-generator/master/src/assets/icons/social/twitter/default.svg" width="47" height="35" alt="twitter logo"  />
-  </a>
-  <a href="https://discord.com/channels/festo1" target="_blank">
-    <img src="https://raw.githubusercontent.com/maurodesouza/profile-readme-generator/master/src/assets/icons/social/discord/default.svg" width="47" height="35" alt="discord logo"  />
-  </a>
-  <a href="https://www.linkedin.com/in/festo-muwanguzi/" target="_blank">
-    <img src="https://raw.githubusercontent.com/maurodesouza/profile-readme-generator/master/src/assets/icons/social/linkedin/default.svg" width="47" height="35" alt="linkedin logo"  />
-  </a>
-      <a href="https://t.me/Festo_ug" target="_blank">
-    <img src="https://raw.githubusercontent.com/maurodesouza/profile-readme-generator/master/src/assets/icons/social/telegram/default.svg" width="47" height="35" alt="telegram logo"  />
-  </a>
-    <a href="https://www.youtube.com/@Discussion_Central" target="_blank">
-    <img src="https://raw.githubusercontent.com/maurodesouza/profile-readme-generator/master/src/assets/icons/social/youtube/default.svg" width="47" height="35" alt="youtube logo"  />
-  </a>
-  <a href="https://patreon.com/SoftwareEngineer960" target="_blank">
-    <img src="https://raw.githubusercontent.com/maurodesouza/profile-readme-generator/master/src/assets/icons/social/patreon/default.svg" width="47" height="35" alt="patreon logo"  />
-  </a>
-</div>
-
-###
+---
 
 ## Tech Stack 💻
 #### Languages
