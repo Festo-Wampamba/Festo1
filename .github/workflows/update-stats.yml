@@ -1,178 +1,150 @@
 # ============================================================================
-# GITHUB STATS AUTO-UPDATE WORKFLOW
+# GITHUB STATS AUTO-UPDATE WORKFLOW (SELF-HOSTED VERCEL)
 # ============================================================================
-# Purpose: Downloads and caches GitHub statistics cards with radical theme
+# Purpose: Downloads stats from your own Vercel deployment
 # Author: Festo Wampamba
-# Timezone: EAT (Uganda - UTC+3)
-# Update Schedule: Daily at 2:00 AM EAT
+# Deployment: github-readme-stats-three-azure-32.vercel.app
+# Timezone: EAT (Uganda)
 # ============================================================================
 
 name: Update GitHub Stats
 
-# ============================================================================
-# WORKFLOW TRIGGERS
-# ============================================================================
 on:
-  # Runs daily at 2:00 AM EAT (11:00 PM UTC previous day)
   schedule:
-    - cron: '0 23 * * *'
-  
-  # Allows manual trigger from GitHub Actions tab
+    - cron: '0 23 * * *'  # Daily at 2 AM EAT
   workflow_dispatch:
-  
-  # Runs when workflow file is modified
   push:
     branches: [ main ]
     paths: [ '.github/workflows/update-stats.yml' ]
 
-# ============================================================================
-# PERMISSIONS
-# ============================================================================
 permissions:
-  contents: write  # Required to commit SVG files to repository
+  contents: write
+
+# ============================================================================
+# ENVIRONMENT VARIABLES
+# ============================================================================
+env:
+  # 🚀 YOUR VERCEL DEPLOYMENT URL
+  STATS_API: "https://github-readme-stats-three-azure-32.vercel.app"
+  GITHUB_USER: "Festo-Wampamba"
+  THEME: "radical"
 
 # ============================================================================
 # JOBS
 # ============================================================================
 jobs:
   update-stats:
-    name: Generate GitHub Statistics Cards
+    name: Generate GitHub Statistics from Self-Hosted Instance
     runs-on: ubuntu-latest
     
     steps:
       # =======================================================================
-      # STEP 1: CHECKOUT REPOSITORY
+      # CHECKOUT REPOSITORY
       # =======================================================================
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for accurate statistics
+          fetch-depth: 0
 
       # =======================================================================
-      # STEP 2: CREATE ASSETS DIRECTORY
+      # CREATE ASSETS DIRECTORY
       # =======================================================================
       - name: Create Assets Directory
         run: mkdir -p assets
 
       # =======================================================================
-      # STEP 3: DOWNLOAD GITHUB STATS CARD (RADICAL THEME)
-      # =======================================================================
-      # Downloads main GitHub statistics card with:
-      # - Username: Festo-Wampamba
-      # - Theme: Radical (pink/magenta gradient)
-      # - Shows icons for each stat
-      # - Includes all commits (not just current year)
-      # - Includes private repository stats
-      # - No border hiding
+      # DOWNLOAD STATS CARD FROM YOUR VERCEL INSTANCE
       # =======================================================================
       - name: Download GitHub Stats Card
         run: |
-          echo "📊 Downloading GitHub Stats Card..."
-          curl -L -f --retry 5 --retry-delay 3 --max-time 60 \
+          echo "📊 Downloading GitHub Stats from self-hosted instance..."
+          echo "URL: ${{ env.STATS_API }}/api"
+          
+          curl -L -f \
+            --retry 3 \
+            --retry-delay 2 \
+            --max-time 30 \
             -H "Accept: image/svg+xml" \
             -o assets/github-stats-radical.svg \
-            "https://github-readme-stats.vercel.app/api?username=Festo-Wampamba&show_icons=true&theme=radical&hide_border=false&include_all_commits=true&count_private=true&cache_seconds=86400" \
-            || echo "⚠️  Stats card download failed, keeping previous version"
-        continue-on-error: true
+            "${{ env.STATS_API }}/api?username=${{ env.GITHUB_USER }}&show_icons=true&theme=${{ env.THEME }}&hide_border=false&include_all_commits=true&count_private=true" \
+            && echo "✅ Stats card downloaded!" \
+            || { echo "❌ Failed to download stats card"; exit 1; }
 
       # =======================================================================
-      # STEP 4: DOWNLOAD GITHUB STREAK CARD (RADICAL THEME)
-      # =======================================================================
-      # Downloads contribution streak statistics with:
-      # - Current streak counter
-      # - Longest streak record
-      # - Total contributions
-      # - Radical theme to match stats card
+      # DOWNLOAD STREAK CARD (EXTERNAL SERVICE)
       # =======================================================================
       - name: Download GitHub Streak Card
         run: |
-          echo "🔥 Downloading GitHub Streak Card..."
-          curl -L -f --retry 5 --retry-delay 3 --max-time 60 \
+          echo "🔥 Downloading GitHub Streak card..."
+          
+          curl -L -f \
+            --retry 3 \
+            --retry-delay 2 \
+            --max-time 30 \
             -H "Accept: image/svg+xml" \
             -o assets/github-streak-radical.svg \
-            "https://github-readme-streak-stats.herokuapp.com/?user=Festo-Wampamba&theme=radical&hide_border=false" \
-            || echo "⚠️  Streak card download failed, keeping previous version"
-        continue-on-error: true
+            "https://github-readme-streak-stats.herokuapp.com/?user=${{ env.GITHUB_USER }}&theme=${{ env.THEME }}&hide_border=false" \
+            && echo "✅ Streak card downloaded!" \
+            || { echo "❌ Failed to download streak card"; exit 1; }
 
       # =======================================================================
-      # STEP 5: DOWNLOAD TOP LANGUAGES CARD (RADICAL THEME)
-      # =======================================================================
-      # Downloads most used programming languages with:
-      # - Compact layout (horizontal bars)
-      # - Shows top 10 languages
-      # - Includes private repos
-      # - Excludes HTML/CSS by default for cleaner view
+      # DOWNLOAD TOP LANGUAGES FROM YOUR VERCEL INSTANCE
       # =======================================================================
       - name: Download Top Languages Card
         run: |
-          echo "💻 Downloading Top Languages Card..."
-          curl -L -f --retry 5 --retry-delay 3 --max-time 60 \
+          echo "💻 Downloading Top Languages from self-hosted instance..."
+          
+          curl -L -f \
+            --retry 3 \
+            --retry-delay 2 \
+            --max-time 30 \
             -H "Accept: image/svg+xml" \
             -o assets/top-languages-radical.svg \
-            "https://github-readme-stats.vercel.app/api/top-langs/?username=Festo-Wampamba&theme=radical&hide_border=false&include_all_commits=true&count_private=true&layout=compact&langs_count=10&hide=html,css&card_width=445" \
-            || echo "⚠️  Languages card download failed, keeping previous version"
-        continue-on-error: true
+            "${{ env.STATS_API }}/api/top-langs/?username=${{ env.GITHUB_USER }}&theme=${{ env.THEME }}&hide_border=false&layout=compact&langs_count=10&hide=html,css&card_width=445" \
+            && echo "✅ Languages card downloaded!" \
+            || { echo "❌ Failed to download languages card"; exit 1; }
 
       # =======================================================================
-      # STEP 6: VALIDATE DOWNLOADED SVG FILES
+      # VERIFY ALL FILES DOWNLOADED SUCCESSFULLY
       # =======================================================================
-      # Checks if SVG files were downloaded successfully and contain valid data
-      # If files are empty or contain error messages, they won't be committed
-      # =======================================================================
-      - name: Validate SVG Files
+      - name: Verify Downloaded Files
         run: |
-          echo "✅ Validating downloaded SVG files..."
+          echo "🔍 Verifying downloaded SVG files..."
           
-          # Function to check if SVG is valid
-          validate_svg() {
-            local file=$1
+          for file in assets/github-stats-radical.svg assets/github-streak-radical.svg assets/top-languages-radical.svg; do
             if [ -f "$file" ]; then
-              local size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null)
+              size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file")
               if [ "$size" -gt 1000 ]; then
-                if grep -q "<svg" "$file" && ! grep -q "503" "$file"; then
-                  echo "  ✓ $file is valid (${size} bytes)"
-                  return 0
-                fi
+                echo "  ✅ $file (${size} bytes)"
+              else
+                echo "  ⚠️  $file is too small (${size} bytes)"
               fi
+            else
+              echo "  ❌ $file not found"
             fi
-            echo "  ✗ $file is invalid or too small"
-            return 1
-          }
-          
-          # Validate each SVG file
-          validate_svg "assets/github-stats-radical.svg" || true
-          validate_svg "assets/github-streak-radical.svg" || true
-          validate_svg "assets/top-languages-radical.svg" || true
-          
-          echo "Validation complete!"
+          done
 
       # =======================================================================
-      # STEP 7: COMMIT AND PUSH UPDATED SVG FILES
-      # =======================================================================
-      # Commits the downloaded SVG files to the repository
-      # Only commits if files have changed
-      # Uses [skip ci] to prevent recursive workflow triggers
+      # COMMIT AND PUSH TO REPOSITORY
       # =======================================================================
       - name: Commit and Push Stats
         run: |
-          # Configure git with GitHub Actions bot credentials
+          echo "💾 Committing changes..."
+          
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Add all SVG files in assets directory
           git add assets/*.svg
           
-          # Check if there are any changes to commit
           if git diff --staged --quiet; then
-            echo "📭 No changes to commit - SVG files are up to date"
+            echo "📭 No changes to commit - stats are up to date"
           else
-            # Commit with descriptive message and skip CI flag
-            git commit -m "Auto-update: GitHub stats (Radical theme) [skip ci]" \
-                       -m "Updated at: $(date '+%Y-%m-%d %H:%M:%S EAT')" \
-                       -m "Cards: Stats, Streak, Languages"
+            git commit -m "Auto-update: GitHub stats (Self-hosted Vercel) [skip ci]" \
+                       -m "📅 Updated: $(date '+%Y-%m-%d %H:%M:%S EAT')" \
+                       -m "🚀 Source: github-readme-stats-three-azure-32.vercel.app" \
+                       -m "🎨 Theme: Radical"
             
-            # Push changes to main branch
             git push
             
-            echo "✅ Successfully committed and pushed updated stats!"
+            echo "✅ Successfully updated GitHub stats!"
           fi
