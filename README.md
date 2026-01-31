@@ -135,8 +135,6 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 ---
 
-## 🐦 Latest Tweet
-[![](https://gtce.itsvg.in/api?username=festo_alx)](https://twitter.com/Festo_alx/status/1622224421602693124)
 
 ### ✍️  Festo's Random Quotes
 ![](https://quotes-github-readme.vercel.app/api?type=horizontal&theme=tokyonight)
