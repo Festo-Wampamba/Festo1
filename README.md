@@ -128,9 +128,8 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 
 # 📊 GitHub Stats:
-![](https://github-readme-stats.vercel.app/api?username=Festo-Wampamba&theme=onedark&hide_border=false&include_all_commits=true&count_private=true)<br/>
-![](https://nirzak-streak-stats.vercel.app/?user=Festo-Wampamba&theme=onedark&hide_border=false)<br/>
-![](https://github-readme-stats.vercel.app/api/top-langs/?username=Festo-Wampamba&theme=onedark&hide_border=false&include_all_commits=true&count_private=true&layout=compact)
+![Festo's GitHub Stats](./assets/github-stats.svg)
+![Festo's GitHub stats](https://github-readme-stats.vercel.app/api?username=aFest-Wampamba&show_icons=true&theme=radical)
 
 
 ---
