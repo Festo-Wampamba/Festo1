@@ -1,0 +1,32 @@
+# ============================================================================
+# YOUTUBE VIDEOS AUTO-UPDATE WORKFLOW
+# ============================================================================
+# Purpose: Automatically fetches latest YouTube videos from your channel
+# Updates: README.md with current views, dates, and thumbnails
+# Schedule: Daily at 3 AM EAT
+# ============================================================================
+
+name: Update YouTube Cards
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at 3 AM EAT
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: [ '.github/workflows/youtube-cards.yml' ]
+
+permissions:
+  contents: write
+
+jobs:
+  update-youtube:
+    name: Fetch Latest YouTube Videos
+    runs-on: ubuntu-latest
+    
+    steps:
+      # =======================================================================
+      # CHECKOUT REPOSITORY
+      # =======================================================================
+      - name: Checkout Repository
+    
