@@ -128,8 +128,9 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 
 # 📊 GitHub Stats:
-![Festo's GitHub Stats](./assets/github-stats.svg)
-![Festo's GitHub stats](https://github-readme-stats.vercel.app/api?username=aFest-Wampamba&show_icons=true&theme=radical)
+
+![Streak](./assets/github-streak-radical.svg)
+
 
 
 ---
