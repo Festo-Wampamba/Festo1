@@ -82,15 +82,16 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 ### 📺 Featured YouTube Videos
 
-<br>
+<!-- BEGIN YOUTUBE-CARDS -->
+<!-- END YOUTUBE-CARDS -->
 
-<p align="left">
+<p align="center">
   <a href="https://www.youtube.com/channel/UCSiPOa3Vowwi42t1BysexmQ?sub_confirmation=1">
-    <img src="https://custom-icon-badges.demolab.com/badge/-Subscribe%20For%20More-red?style=for-the-badge&logo=video&logoColor=white"/>
+    <img src="https://custom-icon-badges.demolab.com/badge/-Subscribe%20For%20More-red?style=for-the-badge&logo=video&logoColor=white" alt="Subscribe"/>
   </a>
 </p>
 
-#
+---
 
 ---
 
