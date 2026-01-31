@@ -1,95 +1,43 @@
-# ============================================
-# GITHUB STATS AUTO-UPDATE WORKFLOW
-# ============================================
-# Purpose: Generates and updates GitHub statistics card daily
-# Author: Festo Wampamba
-# Timezone: EAT (Uganda - UTC+3)
-# ============================================
-
 name: Update GitHub Stats
 
-# ============================================
-# TRIGGER CONFIGURATION
-# ============================================
 on:
-  # Runs automatically every day at 2:00 AM EAT (11:00 PM UTC)
   schedule:
-    - cron: '0 23 * * *'  # Minute Hour Day Month DayOfWeek
-  
-  # Allows manual trigger from GitHub Actions UI
+    - cron: '0 23 * * *'  # Daily at 2 AM EAT
   workflow_dispatch:
-  
-  # Runs when this workflow file is updated
   push:
     branches: [ main ]
     paths: [ '.github/workflows/update-stats.yml' ]
 
-# ============================================
-# PERMISSIONS
-# ============================================
-# Required for the workflow to commit changes
 permissions:
-  contents: write  # Allows git push to repository
+  contents: write
 
-# ============================================
-# JOBS
-# ============================================
 jobs:
   update-stats:
-    name: Generate and Update Stats Card
-    runs-on: ubuntu-latest  # Latest Ubuntu runner
+    runs-on: ubuntu-latest
     
     steps:
-      # --------------------------------------------
-      # STEP 1: Checkout Repository
-      # --------------------------------------------
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Fetch all history for accurate stats
 
-      # --------------------------------------------
-      # STEP 2: Create Assets Directory (if not exists)
-      # --------------------------------------------
-      - name: Ensure Assets Directory Exists
+      - name: Create Assets Directory
         run: mkdir -p assets
 
-      # --------------------------------------------
-      # STEP 3: Generate GitHub Statistics Card
-      # --------------------------------------------
-      - name: Generate GitHub Stats Card
-        uses: cicirello/user-statistician@v1
-        with:
-          # Output file path
-          image-file: assets/github-stats.svg
-          
-          # Color theme (dark, light, halloween, etc.)
-          colors: dark
-          
-          # Show title on the card
-          include-title: true
-          
-          # Custom title text
-          custom-title: "Festo's GitHub Statistics"
-          
-          # Show card border
-          show-border: true
-          
-          # Border corner radius in pixels
-          border-radius: 10
-          
-          # Maximum number of languages to show
-          max-languages: 10
-          
-          # Disable animated language chart
-          animated-language-chart: false
-          
-          # Auto-commit changes to repository
-          commit-and-push: true
-          
-          # Commit message
-          commit-message: "Auto-update: GitHub stats [skip ci]"
-          
-        env:
-          # GitHub token for API access
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download GitHub Stats Card (Radical Theme)
+        run: |
+          curl -o assets/github-stats.svg "https://github-readme-stats.vercel.app/api?username=Festo-Wampamba&show_icons=true&theme=radical&hide_border=false&include_all_commits=true&count_private=true"
+
+      - name: Download GitHub Streak Stats
+        run: |
+          curl -o assets/github-streak.svg "https://github-readme-streak-stats.herokuapp.com/?user=Festo-Wampamba&theme=radical&hide_border=false"
+
+      - name: Download Top Languages Card
+        run: |
+          curl -o assets/top-languages.svg "https://github-readme-stats.vercel.app/api/top-langs/?username=Festo-Wampamba&theme=radical&hide_border=false&include_all_commits=true&count_private=true&layout=compact"
+
+      - name: Commit and Push Stats
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/*.svg
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update: GitHub stats [skip ci]"
+          git push
