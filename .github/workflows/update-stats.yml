@@ -1,38 +1,95 @@
-name: GitHub Stats Generator
+# ============================================
+# GITHUB STATS AUTO-UPDATE WORKFLOW
+# ============================================
+# Purpose: Generates and updates GitHub statistics card daily
+# Author: Festo Wampamba
+# Timezone: EAT (Uganda - UTC+3)
+# ============================================
 
+name: Update GitHub Stats
+
+# ============================================
+# TRIGGER CONFIGURATION
+# ============================================
 on:
+  # Runs automatically every day at 2:00 AM EAT (11:00 PM UTC)
   schedule:
-    - cron: '0 2 * * *'  # Runs daily at 2 AM UTC
-  workflow_dispatch:  # Allows manual trigger from Actions tab
+    - cron: '0 23 * * *'  # Minute Hour Day Month DayOfWeek
+  
+  # Allows manual trigger from GitHub Actions UI
+  workflow_dispatch:
+  
+  # Runs when this workflow file is updated
   push:
     branches: [ main ]
     paths: [ '.github/workflows/update-stats.yml' ]
 
+# ============================================
+# PERMISSIONS
+# ============================================
+# Required for the workflow to commit changes
 permissions:
-  contents: write  # Required for committing files
+  contents: write  # Allows git push to repository
 
+# ============================================
+# JOBS
+# ============================================
 jobs:
-  generate-stats:
-    runs-on: ubuntu-latest
+  update-stats:
+    name: Generate and Update Stats Card
+    runs-on: ubuntu-latest  # Latest Ubuntu runner
     
     steps:
+      # --------------------------------------------
+      # STEP 1: Checkout Repository
+      # --------------------------------------------
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Fetch all history for accurate stats
 
-      - name: Generate GitHub Statistics SVG
+      # --------------------------------------------
+      # STEP 2: Create Assets Directory (if not exists)
+      # --------------------------------------------
+      - name: Ensure Assets Directory Exists
+        run: mkdir -p assets
+
+      # --------------------------------------------
+      # STEP 3: Generate GitHub Statistics Card
+      # --------------------------------------------
+      - name: Generate GitHub Stats Card
         uses: cicirello/user-statistician@v1
         with:
+          # Output file path
           image-file: assets/github-stats.svg
+          
+          # Color theme (dark, light, halloween, etc.)
           colors: dark
+          
+          # Show title on the card
           include-title: true
+          
+          # Custom title text
           custom-title: "Festo's GitHub Statistics"
+          
+          # Show card border
           show-border: true
+          
+          # Border corner radius in pixels
           border-radius: 10
+          
+          # Maximum number of languages to show
           max-languages: 10
+          
+          # Disable animated language chart
           animated-language-chart: false
+          
+          # Auto-commit changes to repository
           commit-and-push: true
+          
+          # Commit message
           commit-message: "Auto-update: GitHub stats [skip ci]"
+          
         env:
+          # GitHub token for API access
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
