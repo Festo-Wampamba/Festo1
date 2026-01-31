@@ -2,7 +2,7 @@ name: Update GitHub Stats
 
 on:
   schedule:
-    - cron: '0 23 * * *'  # Daily at 2 AM EAT
+    - cron: '0 23 * * *'
   workflow_dispatch:
   push:
     branches: [ main ]
@@ -22,17 +22,18 @@ jobs:
       - name: Create Assets Directory
         run: mkdir -p assets
 
-      - name: Download GitHub Stats Card (Radical Theme)
+      # Radical Theme (Main)
+      - name: Generate Stats - Radical Theme
         run: |
-          curl -o assets/github-stats.svg "https://github-readme-stats.vercel.app/api?username=Festo-Wampamba&show_icons=true&theme=radical&hide_border=false&include_all_commits=true&count_private=true"
+          curl -o assets/github-stats-radical.svg "https://github-readme-stats.vercel.app/api?username=Festo-Wampamba&show_icons=true&theme=radical&hide_border=false&include_all_commits=true&count_private=true"
+          curl -o assets/github-streak-radical.svg "https://github-readme-streak-stats.herokuapp.com/?user=Festo-Wampamba&theme=radical&hide_border=false"
+          curl -o assets/top-languages-radical.svg "https://github-readme-stats.vercel.app/api/top-langs/?username=Festo-Wampamba&theme=radical&hide_border=false&layout=compact&langs_count=10"
 
-      - name: Download GitHub Streak Stats
+      # Tokyo Night Theme (Alternative)
+      - name: Generate Stats - Tokyo Night Theme
         run: |
-          curl -o assets/github-streak.svg "https://github-readme-streak-stats.herokuapp.com/?user=Festo-Wampamba&theme=radical&hide_border=false"
-
-      - name: Download Top Languages Card
-        run: |
-          curl -o assets/top-languages.svg "https://github-readme-stats.vercel.app/api/top-langs/?username=Festo-Wampamba&theme=radical&hide_border=false&include_all_commits=true&count_private=true&layout=compact"
+          curl -o assets/github-stats-tokyonight.svg "https://github-readme-stats.vercel.app/api?username=Festo-Wampamba&show_icons=true&theme=tokyonight&hide_border=false&include_all_commits=true&count_private=true"
+          curl -o assets/top-languages-tokyonight.svg "https://github-readme-stats.vercel.app/api/top-langs/?username=Festo-Wampamba&theme=tokyonight&hide_border=false&layout=compact&langs_count=10"
 
       - name: Commit and Push Stats
         run: |
