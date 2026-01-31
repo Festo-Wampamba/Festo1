@@ -129,7 +129,23 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 # 📊 GitHub Stats:
 
-![Streak](./assets/github-streak-radical.svg)
+<p align="center">
+  <img src="./assets/github-stats-radical.svg" alt="Stats" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="./assets/github-streak-radical.svg" alt="Streak" />
+</p>
+
+<p align="center">
+  <img src="./assets/top-languages-radical.svg" alt="Languages" />
+</p>
+
+---
+
+## 📈 Contribution Graph
+
+<div align="center">
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=Festo-Wampamba&theme=react-dark&hide_border=false&area=true" alt="Contribution Graph" />
+</div>
 
 
 
@@ -137,7 +153,9 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 
 ### ✍️  Festo's Random Quotes
-![](https://quotes-github-readme.vercel.app/api?type=horizontal&theme=tokyonight)
+<div align="left">
+  <img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=radical" alt="Random Dev Quote" />
+</div>
 
 ---
 
@@ -149,7 +167,7 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 ###
 
- ### Thanks for Visiting my GitHub Profile!
+ ### Show some ❤️ by starring some repositories!
 
   ## 💰 You can help me by Donating
  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/festo12) [![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/festo) 
