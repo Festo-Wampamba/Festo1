@@ -1,0 +1,38 @@
+name: GitHub Stats Generator
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Runs daily at 2 AM UTC
+  workflow_dispatch:  # Allows manual trigger from Actions tab
+  push:
+    branches: [ main ]
+    paths: [ '.github/workflows/update-stats.yml' ]
+
+permissions:
+  contents: write  # Required for committing files
+
+jobs:
+  generate-stats:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate GitHub Statistics SVG
+        uses: cicirello/user-statistician@v1
+        with:
+          image-file: assets/github-stats.svg
+          colors: dark
+          include-title: true
+          custom-title: "Festo's GitHub Statistics"
+          show-border: true
+          border-radius: 10
+          max-languages: 10
+          animated-language-chart: false
+          commit-and-push: true
+          commit-message: "Auto-update: GitHub stats [skip ci]"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
