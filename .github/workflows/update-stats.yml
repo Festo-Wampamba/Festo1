@@ -4,7 +4,7 @@
 # Purpose: Downloads stats from your own Vercel deployment
 # Author: Festo Wampamba
 # Deployment: github-readme-stats-three-azure-32.vercel.app
-# Timezone: EAT (Uganda)
+# Timezone: EAT
 # ============================================================================
 
 name: Update GitHub Stats
