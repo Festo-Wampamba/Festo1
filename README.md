@@ -1,4 +1,4 @@
-<h1 align="center">
+ <h1 align="center">
     <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&center=true&vCenter=true&width=500&height=70&duration=4000&lines=Hi+There!+👋;+I'm+Festo+Wampamba!;" />
 </h1>
 
@@ -128,6 +128,8 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 
 # 📊 GitHub Stats:
+![](https://github-readme-stats.vercel.app/api?username=Festo-Wampamba&show_icons=true&theme=radical)
+
 ![](https://github-readme-stats.vercel.app/api?username=Festo-Wampamba&theme=onedark&hide_border=false&include_all_commits=true&count_private=true)<br/>
 ![](https://nirzak-streak-stats.vercel.app/?user=Festo-Wampamba&theme=onedark&hide_border=false)<br/>
 ![](https://github-readme-stats.vercel.app/api/top-langs/?username=Festo-Wampamba&theme=onedark&hide_border=false&include_all_commits=true&count_private=true&layout=compact)
