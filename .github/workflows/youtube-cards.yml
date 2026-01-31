@@ -1,70 +1,159 @@
 # ============================================================================
-# YOUTUBE VIDEOS AUTO-UPDATE WORKFLOW
+# YOUTUBE VIDEOS WITH VIEW COUNTS - ADVANCED WORKFLOW
 # ============================================================================
-# Purpose: Automatically fetches latest YouTube videos from your channel
-# Updates: README.md with current views, dates, and thumbnails
-# Schedule: Daily at 3 AM EAT
+# Features:
+# - Displays view counts on each video
+# - Shows latest 4 videos
+# - Shows 2 most viewed videos
+# - Auto-updates daily at 3 AM EAT
 # ============================================================================
 
-name: Update YouTube Cards
+name: Update YouTube Videos
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Daily at 3 AM EAT
+    - cron: '0 0 * * *'
   workflow_dispatch:
-  push:
-    branches: [ main ]
-    paths: [ '.github/workflows/youtube-cards.yml' ]
 
 permissions:
   contents: write
 
 jobs:
   update-youtube:
-    name: Update YouTube Videos
+    name: Fetch YouTube Videos with Stats
     runs-on: ubuntu-latest
     
     steps:
-      # =======================================================================
-      # STEP 1: CHECKOUT REPOSITORY
-      # =======================================================================
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # =======================================================================
-      # STEP 2: FETCH LATEST YOUTUBE VIDEOS
-      # =======================================================================
-      - name: Fetch YouTube Videos
-        uses: DenverCoder1/github-readme-youtube-cards@main
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          channel_id: UCSiPOa3Vowwi42t1BysexmQ
-          comment_tag_name: YOUTUBE-CARDS
-          youtube_api_key: ${{ secrets.YOUTUBE_API_KEY }}
-          max_videos: 6
-          card_width: 250
-          border_radius: 5
-          background_color: "#0d1117"
-          title_color: "#ffffff"
-          stats_color: "#dedede"
-          max_title_lines: 2
-          show_duration: true
+          python-version: '3.11'
 
-      # =======================================================================
-      # STEP 3: COMMIT AND PUSH CHANGES
-      # =======================================================================
-      - name: Commit Updated README
+      - name: Install Dependencies
+        run: |
+          pip install google-api-python-client python-dateutil
+
+      - name: Generate YouTube Video Cards
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          CHANNEL_ID: UCSiPOa3Vowwi42t1BysexmQ
+        run: |
+          python3 << 'PYTHON_SCRIPT'
+          import os
+          import re
+          from googleapiclient.discovery import build
+          from dateutil import parser
+          from datetime import datetime
+          
+          api_key = os.environ['YOUTUBE_API_KEY']
+          channel_id = os.environ['CHANNEL_ID']
+          youtube = build('youtube', 'v3', developerKey=api_key)
+          
+          channel_response = youtube.channels().list(
+              part='contentDetails',
+              id=channel_id
+          ).execute()
+          
+          uploads_playlist_id = channel_response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+          
+          videos_response = youtube.playlistItems().list(
+              part='snippet',
+              playlistId=uploads_playlist_id,
+              maxResults=50
+          ).execute()
+          
+          video_ids = [item['snippet']['resourceId']['videoId'] for item in videos_response['items']]
+          
+          stats_response = youtube.videos().list(
+              part='statistics,contentDetails',
+              id=','.join(video_ids)
+          ).execute()
+          
+          videos = []
+          for item in stats_response['items']:
+              video_id = item['id']
+              stats = item['statistics']
+              duration = item['contentDetails']['duration']
+              
+              snippet = next(v['snippet'] for v in videos_response['items'] 
+                           if v['snippet']['resourceId']['videoId'] == video_id)
+              
+              duration_match = re.findall(r'(\d+)([HMS])', duration)
+              seconds = sum(int(num) * {'H': 3600, 'M': 60, 'S': 1}[unit] for num, unit in duration_match)
+              
+              published_at = parser.parse(snippet['publishedAt'])
+              
+              videos.append({
+                  'id': video_id,
+                  'title': snippet['title'],
+                  'views': int(stats.get('viewCount', 0)),
+                  'published': published_at,
+                  'duration': seconds,
+                  'thumbnail': snippet['thumbnails']['high']['url']
+              })
+          
+          latest_videos = sorted(videos, key=lambda x: x['published'], reverse=True)[:4]
+          most_viewed = sorted(videos, key=lambda x: x['views'], reverse=True)[:2]
+          
+          def format_views(views):
+              if views >= 1000000:
+                  return f"{views/1000000:.1f}M"
+              elif views >= 1000:
+                  return f"{views/1000:.1f}K"
+              return str(views)
+          
+          def generate_card(video):
+              title = video['title'].replace(' ', '+')
+              views_formatted = format_views(video['views'])
+              timestamp = int(video['published'].timestamp())
+              
+              card_url = f"https://ytcards.demolab.com/?id={video['id']}&title={title[:50]}&lang=en&timestamp={timestamp}&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=2&width=250&border_radius=5&duration={video['duration']}"
+              
+              return f'<a href="https://www.youtube.com/watch?v={video["id"]}"><img src="{card_url}" alt="{video["title"]}" /></a>'
+          
+          latest_cards = '\n  '.join([generate_card(v) for v in latest_videos])
+          popular_cards = '\n  '.join([generate_card(v) for v in most_viewed])
+          
+          markdown = f"""### 🎬 Latest Videos
+
+<p align="center">
+  {latest_cards}
+</p>
+
+### 🔥 Most Viewed Videos
+
+<p align="center">
+  {popular_cards}
+</p>"""
+          
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+          
+          pattern = r'<!-- BEGIN YOUTUBE-CARDS -->.*?<!-- END YOUTUBE-CARDS -->'
+          replacement = f'<!-- BEGIN YOUTUBE-CARDS -->\n{markdown}\n<!-- END YOUTUBE-CARDS -->'
+          
+          new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+          
+          with open('README.md', 'w', encoding='utf-8') as f:
+              f.write(new_content)
+          
+          print("✅ YouTube videos updated successfully!")
+          print(f"📊 Latest 4 videos added")
+          print(f"🔥 Top 2 most viewed videos added")
+          PYTHON_SCRIPT
+
+      - name: Commit Changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
           git add README.md
-          
           if git diff --staged --quiet; then
-            echo "📭 No new YouTube videos to update"
+            echo "📭 No changes to commit"
           else
-            git commit -m "Auto-update: YouTube videos [skip ci]" \
-                       -m "Updated: $(date '+%Y-%m-%d %H:%M:%S EAT')" \
-                       -m "Latest 6 videos from channel"
+            git commit -m "Auto-update: YouTube videos with view counts [skip ci]" -m "📅 Updated: $(date '+%Y-%m-%d %H:%M:%S EAT')" -m "🎬 Latest 4 videos" -m "🔥 Top 2 most viewed videos"
             git push
-            echo "✅ YouTube videos updated successfully!"
+            echo "✅ Changes pushed successfully!"
           fi
