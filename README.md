@@ -47,7 +47,7 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
              style="width:100%; height:200px; object-fit:cover; border-radius: 10px;"/>
       </a>
       <br/>
-      <h3>🚀 kore-standards</h3>
+      <h3>kore-standards</h3>
       <sub>The core infrastructure project building industry-standard software solutions for Uganda and beyond.</sub><br/>
       <br/>
       <a href="https://github.com/Festo-Wampamba/kore-standards">
