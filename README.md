@@ -134,11 +134,9 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 # 📊 GitHub Stats:
 
-<p align="left">
-  <img src="./assets/github-stats-radical.svg" alt="Stats" />
-  &nbsp;&nbsp;&nbsp;
-  <img src="./assets/github-streak-radical.svg" alt="Streak" />
-</p>
+| Stats | Streak |
+| :---: | :---: |
+| ![Stats](./assets/github-stats-radical.svg) | ![Streak](./assets/github-streak-radical.svg) |
 
 <p align="center">
   <img src="./assets/top-languages-radical.svg" alt="Languages" />
