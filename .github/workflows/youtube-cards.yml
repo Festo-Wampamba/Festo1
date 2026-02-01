@@ -1,12 +1,20 @@
 # ============================================================================
-# YOUTUBE VIDEOS AUTO-UPDATE WORKFLOW (VIEWS ONLY)
+# YOUTUBE VIDEOS AUTO-UPDATE WORKFLOW
 # ============================================================================
+# Purpose: Automatically fetches latest YouTube videos from your channel
+# Updates: README.md with current views, dates, and thumbnails
+# Schedule: Daily at 3 AM EAT
+# ============================================================================
+
 name: Update YouTube Cards
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Daily at midnight UTC
+    - cron: '0 0 * * *'  # Daily at 3 AM EAT
   workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: [ '.github/workflows/youtube-cards.yml' ]
 
 permissions:
   contents: write
@@ -17,26 +25,46 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      # =======================================================================
+      # STEP 1: CHECKOUT REPOSITORY
+      # =======================================================================
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Update YouTube Cards
+      # =======================================================================
+      # STEP 2: FETCH LATEST YOUTUBE VIDEOS
+      # =======================================================================
+      - name: Fetch YouTube Videos
         uses: DenverCoder1/github-readme-youtube-cards@main
         with:
           channel_id: UCSiPOa3Vowwi42t1BysexmQ
-          api_key: ${{ secrets.YOUTUBE_API_KEY }}
+          comment_tag_name: YOUTUBE-CARDS
+          youtube_api_key: ${{ secrets.YOUTUBE_API_KEY }}
           max_videos: 6
-          # -------------------------------------------------------
-          # CUSTOMIZATION: Clean Look (Views Only)
-          # -------------------------------------------------------
-          show_duration: false     # Hide duration (e.g. "10:05")
-          show_view_count: true    # Show View Count
-          # -------------------------------------------------------
-          # STYLING
-          # -------------------------------------------------------
+          card_width: 250
+          border_radius: 5
           background_color: "#0d1117"
           title_color: "#ffffff"
           stats_color: "#dedede"
           max_title_lines: 2
-          width: 250
-          border_radius: 5
+          show_duration: true
+
+      # =======================================================================
+      # STEP 3: COMMIT AND PUSH CHANGES
+      # =======================================================================
+      - name: Commit Updated README
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          git add README.md
+          
+          if git diff --staged --quiet; then
+            echo "📭 No new YouTube videos to update"
+          else
+            git commit -m "Auto-update: YouTube videos [skip ci]" \
+                       -m "Updated: $(date '+%Y-%m-%d %H:%M:%S EAT')" \
+                       -m "Latest 6 videos from channel"
+            git push
+            echo "✅ YouTube videos updated successfully!"
+          fi
