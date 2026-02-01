@@ -1,4 +1,5 @@
-name: YouTube Cards Update
+name: Update YouTube Videos
+
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -8,22 +9,150 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  update-youtube:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      
-      # We use a pre-built Action instead of a custom Python script
-      # This eliminates all "syntax error" risks in your YAML
-      - uses: DenverCoder1/github-readme-youtube-cards@main
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          channel_id: UCSiPOa3Vowwi42t1BysexmQ
-          api_key: ${{ secrets.YOUTUBE_API_KEY }}
-          max_videos: 6
-          show_duration: true
-          background_color: "#0d1117"
-          title_color: "#ffffff"
-          stats_color: "#dedede"
-          max_title_lines: 1
-          width: 250
-          border_radius: 5
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pip install google-api-python-client python-dateutil
+
+      - name: Create Python Script
+        run: |
+          cat << 'EOF' > update_videos.py
+          import os
+          import re
+          from googleapiclient.discovery import build
+          from dateutil import parser
+          from datetime import datetime
+
+          def main():
+              api_key = os.environ['YOUTUBE_API_KEY']
+              channel_id = os.environ['CHANNEL_ID']
+              
+              if not api_key:
+                  print("❌ Error: YOUTUBE_API_KEY is missing")
+                  return
+
+              print(f"🔄 Fetching videos for channel: {channel_id}")
+              youtube = build('youtube', 'v3', developerKey=api_key)
+
+              # 1. Get Uploads Playlist ID
+              try:
+                  ch_response = youtube.channels().list(part='contentDetails', id=channel_id).execute()
+                  if not ch_response['items']:
+                      print("❌ Error: Channel not found")
+                      return
+                  uploads_id = ch_response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+              except Exception as e:
+                  print(f"❌ API Error: {e}")
+                  return
+
+              # 2. Get Recent Videos
+              vid_response = youtube.playlistItems().list(part='snippet', playlistId=uploads_id, maxResults=50).execute()
+              video_ids = [item['snippet']['resourceId']['videoId'] for item in vid_response['items']]
+
+              # 3. Get Video Statistics
+              stats_response = youtube.videos().list(part='statistics,contentDetails', id=','.join(video_ids)).execute()
+
+              # 4. Process Data
+              videos = []
+              for item in stats_response['items']:
+                  vid_id = item['id']
+                  stats = item['statistics']
+                  duration = item['contentDetails']['duration']
+                  
+                  snippet = next(v['snippet'] for v in vid_response['items'] 
+                               if v['snippet']['resourceId']['videoId'] == vid_id)
+                  
+                  # Parse ISO Duration
+                  match = re.findall(r'(\d+)([HMS])', duration)
+                  seconds = 0
+                  for num, unit in match:
+                      if unit == 'H': seconds += int(num) * 3600
+                      elif unit == 'M': seconds += int(num) * 60
+                      elif unit == 'S': seconds += int(num)
+
+                  videos.append({
+                      'id': vid_id,
+                      'title': snippet['title'],
+                      'views': int(stats.get('viewCount', 0)),
+                      'published': parser.parse(snippet['publishedAt']),
+                      'duration': seconds
+                  })
+
+              # 5. Sort Lists
+              latest = sorted(videos, key=lambda x: x['published'], reverse=True)[:4]
+              popular = sorted(videos, key=lambda x: x['views'], reverse=True)[:2]
+
+              # 6. Generate Markdown
+              def format_views(v):
+                  if v >= 1000000: return f"{v/1000000:.1f}M"
+                  if v >= 1000: return f"{v/1000:.1f}K"
+                  return str(v)
+
+              def make_card(v):
+                  # Clean title and make URL safe
+                  title = v['title'].replace('|', '-').replace('"', "'")
+                  safe_title = title.replace(' ', '+')
+                  views = format_views(v['views'])
+                  timestamp = int(v['published'].timestamp())
+                  
+                  url = (
+                      f"https://ytcards.demolab.com/?id={v['id']}"
+                      f"&title={safe_title}+%7C+{views}+Views"
+                      f"&lang=en&timestamp={timestamp}"
+                      f"&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede"
+                      f"&max_title_lines=1&width=250&border_radius=5&duration={v['duration']}"
+                  )
+                  return f'<a href="https://www.youtube.com/watch?v={v["id"]}"><img src="{url}" alt="{title}" /></a>'
+
+              latest_md = '\n'.join([make_card(v) for v in latest])
+              popular_md = '\n'.join([make_card(v) for v in popular])
+
+              final_md = f"""### 🎬 Latest Videos\n{latest_md}\n\n### 🔥 Most Viewed Videos\n{popular_md}"""
+
+              # 7. Write to README (SAFE MODE)
+              with open('README.md', 'r', encoding='utf-8') as f:
+                  content = f.read()
+
+              # SAFETY CHECK: Only replace content BETWEEN the tags
+              pattern = r'.*?'
+              replacement = f'\n{final_md}\n'
+              
+              if re.search(pattern, content, flags=re.DOTALL):
+                  new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+                  with open('README.md', 'w', encoding='utf-8') as f:
+                      f.write(new_content)
+                  print("✅ README updated successfully")
+              else:
+                  print("⚠️ Warning: Could not find YOUTUBE-CARDS tags in README. No changes made.")
+
+          if __name__ == "__main__":
+              main()
+          EOF
+
+      - name: Run Python Script
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          CHANNEL_ID: UCSiPOa3Vowwi42t1BysexmQ
+        run: python3 update_videos.py
+
+      - name: Commit Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          if git diff --staged --quiet; then
+            echo "📭 No changes to commit"
+          else
+            git commit -m "Auto-update: YouTube stats [skip ci]"
+            git push
+            echo "✅ Changes pushed successfully!"
+          fi
