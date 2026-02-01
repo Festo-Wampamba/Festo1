@@ -1,5 +1,5 @@
 # ============================================================================
-# YOUTUBE VIDEOS AUTOMATION (Fixed Version)
+# YOUTUBE VIDEOS WITH VIEW COUNTS - WORKING VERSION
 # ============================================================================
 name: Update YouTube Videos
 
@@ -13,7 +13,9 @@ permissions:
 
 jobs:
   update-youtube:
+    name: Fetch YouTube Videos with Stats
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -26,125 +28,122 @@ jobs:
       - name: Install Dependencies
         run: pip install google-api-python-client python-dateutil
 
-      - name: Create Python Script
+      - name: Generate YouTube Video Cards
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          CHANNEL_ID: UCSiPOa3Vowwi42t1BysexmQ
         run: |
-          cat << 'EOF' > update_videos.py
+          cat > update_youtube.py << 'ENDOFPYTHON'
           import os
           import re
           from googleapiclient.discovery import build
           from dateutil import parser
-          from datetime import datetime
 
-          def main():
-              api_key = os.environ['YOUTUBE_API_KEY']
-              channel_id = os.environ['CHANNEL_ID']
+          api_key = os.environ['YOUTUBE_API_KEY']
+          channel_id = os.environ['CHANNEL_ID']
+          youtube = build('youtube', 'v3', developerKey=api_key)
+
+          channel_response = youtube.channels().list(
+              part='contentDetails',
+              id=channel_id
+          ).execute()
+          
+          uploads_playlist_id = channel_response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
+
+          videos_response = youtube.playlistItems().list(
+              part='snippet',
+              playlistId=uploads_playlist_id,
+              maxResults=50
+          ).execute()
+
+          video_ids = [item['snippet']['resourceId']['videoId'] for item in videos_response['items']]
+
+          stats_response = youtube.videos().list(
+              part='statistics,contentDetails',
+              id=','.join(video_ids)
+          ).execute()
+
+          videos = []
+          for item in stats_response['items']:
+              video_id = item['id']
+              stats = item['statistics']
+              duration = item['contentDetails']['duration']
               
-              if not api_key:
-                  print("❌ Error: YOUTUBE_API_KEY is missing")
-                  return
-
-              print(f"🔄 Fetching videos for channel: {channel_id}")
-              youtube = build('youtube', 'v3', developerKey=api_key)
-
-              # 1. Get Uploads Playlist ID
-              try:
-                  ch_response = youtube.channels().list(part='contentDetails', id=channel_id).execute()
-                  if not ch_response['items']:
-                      print("❌ Error: Channel not found")
-                      return
-                  uploads_id = ch_response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-              except Exception as e:
-                  print(f"❌ API Error: {e}")
-                  return
-
-              # 2. Get Recent Videos
-              vid_response = youtube.playlistItems().list(part='snippet', playlistId=uploads_id, maxResults=50).execute()
-              video_ids = [item['snippet']['resourceId']['videoId'] for item in vid_response['items']]
-
-              # 3. Get Video Statistics
-              stats_response = youtube.videos().list(part='statistics,contentDetails', id=','.join(video_ids)).execute()
-
-              # 4. Process Data
-              videos = []
-              for item in stats_response['items']:
-                  vid_id = item['id']
-                  stats = item['statistics']
-                  duration = item['contentDetails']['duration']
-                  
-                  # Find matching snippet
-                  snippet = next(v['snippet'] for v in vid_response['items'] 
-                               if v['snippet']['resourceId']['videoId'] == vid_id)
-                  
-                  # Parse ISO Duration (PT1H2M10S)
-                  match = re.findall(r'(\d+)([HMS])', duration)
-                  seconds = 0
-                  for num, unit in match:
-                      if unit == 'H': seconds += int(num) * 3600
-                      elif unit == 'M': seconds += int(num) * 60
-                      elif unit == 'S': seconds += int(num)
-
-                  videos.append({
-                      'id': vid_id,
-                      'title': snippet['title'],
-                      'views': int(stats.get('viewCount', 0)),
-                      'published': parser.parse(snippet['publishedAt']),
-                      'duration': seconds
-                  })
-
-              # 5. Sort Lists
-              latest = sorted(videos, key=lambda x: x['published'], reverse=True)[:4]
-              popular = sorted(videos, key=lambda x: x['views'], reverse=True)[:2]
-
-              # 6. Generate Markdown
-              def format_views(v):
-                  if v >= 1000000: return f"{v/1000000:.1f}M"
-                  if v >= 1000: return f"{v/1000:.1f}K"
-                  return str(v)
-
-              def make_card(v):
-                  title = v['title'].replace('|', '-').replace('"', "'") # Clean title
-                  safe_title = title.replace(' ', '+') # URL friendly
-                  views = format_views(v['views'])
-                  timestamp = int(v['published'].timestamp())
-                  
-                  # Construct URL
-                  url = (
-                      f"https://ytcards.demolab.com/?id={v['id']}"
-                      f"&title={safe_title}+%7C+{views}+Views"
-                      f"&lang=en&timestamp={timestamp}"
-                      f"&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede"
-                      f"&max_title_lines=1&width=250&border_radius=5&duration={v['duration']}"
-                  )
-                  return f'<a href="https://www.youtube.com/watch?v={v["id"]}"><img src="{url}" alt="{title}" /></a>'
-
-              latest_md = '\n'.join([make_card(v) for v in latest])
-              popular_md = '\n'.join([make_card(v) for v in popular])
-
-              final_md = f"""### 🎬 Latest Videos\n{latest_md}\n\n### 🔥 Most Viewed Videos\n{popular_md}"""
-
-              # 7. Write to README
-              with open('README.md', 'r', encoding='utf-8') as f:
-                  content = f.read()
-
-              pattern = r'.*?'
-              replacement = f'\n{final_md}\n'
+              snippet = next(v['snippet'] for v in videos_response['items'] 
+                           if v['snippet']['resourceId']['videoId'] == video_id)
               
-              new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+              duration_match = re.findall(r'(\d+)([HMS])', duration)
+              seconds = sum(int(num) * {'H': 3600, 'M': 60, 'S': 1}[unit] for num, unit in duration_match)
               
-              with open('README.md', 'w', encoding='utf-8') as f:
-                  f.write(new_content)
+              published_at = parser.parse(snippet['publishedAt'])
+
+              videos.append({
+                  'id': video_id,
+                  'title': snippet['title'],
+                  'views': int(stats.get('viewCount', 0)),
+                  'published': published_at,
+                  'duration': seconds
+              })
+
+          latest_videos = sorted(videos, key=lambda x: x['published'], reverse=True)[:4]
+          most_viewed = sorted(videos, key=lambda x: x['views'], reverse=True)[:2]
+
+          def format_views(views):
+              if views >= 1000000:
+                  return "{:.1f}M".format(views/1000000)
+              elif views >= 1000:
+                  return "{:.1f}K".format(views/1000)
+              return str(views)
+
+          def generate_card(video):
+              video_id = video['id']
+              title = video['title'].replace(' ', '+').replace('&', 'and')
+              views_formatted = format_views(video['views'])
+              timestamp = int(video['published'].timestamp())
+              duration = video['duration']
               
-              print("✅ README updated successfully")
+              title_with_views = "{} | {} views".format(title[:40], views_formatted)
+              
+              card_url = "https://ytcards.demolab.com/?id={}&title={}&lang=en&timestamp={}&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=2&width=250&border_radius=5&duration={}".format(
+                  video_id, title_with_views, timestamp, duration
+              )
+              
+              return '<a href="https://www.youtube.com/watch?v={}"><img src="{}" alt="{}" /></a>'.format(
+                  video_id, card_url, video['title']
+              )
 
-          if __name__ == "__main__":
-              main()
-          EOF
+          latest_cards = '\n  '.join([generate_card(v) for v in latest_videos])
+          popular_cards = '\n  '.join([generate_card(v) for v in most_viewed])
 
-      - name: Run Python Script
-        env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-          CHANNEL_ID: UCSiPOa3Vowwi42t1BysexmQ
-        run: python3 update_videos.py
+          markdown = """### 🎬 Latest Videos
+
+<p align="center">
+  {}
+</p>
+
+### 🔥 Most Viewed Videos
+
+<p align="center">
+  {}
+</p>""".format(latest_cards, popular_cards)
+
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          pattern = r'<!-- BEGIN YOUTUBE-CARDS -->.*?<!-- END YOUTUBE-CARDS -->'
+          replacement = '<!-- BEGIN YOUTUBE-CARDS -->\n{}\n<!-- END YOUTUBE-CARDS -->'.format(markdown)
+          
+          new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+
+          with open('README.md', 'w', encoding='utf-8') as f:
+              f.write(new_content)
+
+          print("✅ YouTube videos updated successfully!")
+          print("📊 Latest 4 videos added")
+          print("🔥 Top 2 most viewed videos added")
+          ENDOFPYTHON
+
+          python3 update_youtube.py
 
       - name: Commit Changes
         run: |
@@ -154,7 +153,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "📭 No changes to commit"
           else
-            git commit -m "Auto-update: YouTube stats [skip ci]"
+            git commit -m "Auto-update: YouTube videos [skip ci]"
             git push
             echo "✅ Changes pushed successfully!"
           fi
