@@ -134,7 +134,7 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 # 📊 GitHub Stats:
 
-| Festo's Stats | Festo's Streak |
+| My Stats | My Streak |
 | :---: | :---: |
 | ![Stats](./assets/github-stats-radical.svg) | ![Streak](./assets/github-streak-radical.svg) |
 
