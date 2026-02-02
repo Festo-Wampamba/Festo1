@@ -170,7 +170,7 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 
 ###
 
- ### Show some ❤️ by starring some repositories!
+ ### Show some ❤️ by starring some repositories
 
   ## 💰 You can help me by Donating
  [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/festo12) [![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/festo) 
