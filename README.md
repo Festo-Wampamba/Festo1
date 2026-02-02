@@ -132,7 +132,7 @@ I'm a Full-Stack Engineer and Content Creator building innovative solutions for 
 </a>
 
 
-# 📊 GitHub Stats:
+# 📊 GitHub Stats
 
 | My Stats | My Streak |
 | :---: | :---: |
