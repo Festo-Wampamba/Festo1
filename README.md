@@ -3,7 +3,7 @@
 </h1>
 
 # Festo Wampamba
-**`Software Engineer & Founder of kore-standards`**
+**`Software Engineer & Founder of kore-standard`**
 
 I'm a Full-Stack Engineer and Content Creator building innovative solutions for the African tech ecosystem. All my projects, like **kore-standards**, are built from the ground up to solve real-life problems. I document this journey and teach DevOps, Networking, and Systems Administration on my YouTube channel, **Enterprise IT Mastery**.
 
