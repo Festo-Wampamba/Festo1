@@ -3,9 +3,9 @@
 </h1>
 
 # Festo Wampamba
-**`Software Engineer & Founder of kore-standard`**
+**`Founder of Lupora Tech | Systems Engineer  | Full-Stack Developer | Tech Educator`**
 
-I'm a Full-Stack Engineer and Content Creator building innovative solutions for the African tech ecosystem. All my projects, like **kore-standards**, are built from the ground up to solve real-life problems. I document this journey and teach DevOps, Networking, and Systems Administration on my YouTube channel, **Enterprise IT Mastery**.
+Festo Wampamba is a Systems Engineer and the founder of Lupora Tech, a startup dedicated to engineering ground-up solutions for the African tech ecosystem. While a seasoned Full-Stack Developer, his core expertise lies in Systems Administration and Networking, ensuring that the innovations built at Lupora Tech are backed by robust, high-performance infrastructure.
 
 <p align="left">
       <a href="https://www.youtube.com/channel/UCSiPOa3Vowwi42t1BysexmQ?sub_confirmation=1">
